@@ -1,0 +1,93 @@
+---
+title: "Viz and EDA"
+author: Anna Ma
+date: Oct 05 2021
+output: github_document
+---
+
+## GG plot
+
+```{r}
+library(tidyverse)
+library(ggridges)
+```
+
+load a data set that we use the most
+
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+## Let's make some plots!
+
+### Scaterplot
+
+tmax vs. tmin
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  # tell what varaible to map on the plot 
+  geom_point()
+```
+
+save ggplot
+
+```{r}
+ggp_tmax_tmin = 
+  weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  # tell what varaible to map on the plot 
+  geom_point()
+
+ggp_tmax_tmin
+# can use ggsave() here 
+```
+
+### LET'S FANCY IT UP
+
+add color? lines?
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  # tell what varaible to map on the plot 
+  geom_point(alpha = 0.3) +
+  geom_smooth(se = FALSE) + 
+  # it's har to see the lines, so we can use other arguments
+  facet_grid(.~ name)
+  #Using the dot because ...?  
+```
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  # tell what varaible to map on the plot 
+  geom_point(alpha = 0.3, aes(color = name)) +
+  # shifted the aes from global to only the points 
+  geom_smooth(se = FALSE)
+```
+
+make one more scatter plot
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, size = prcp)) + 
+  geom_point(alpha = 0.3) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
