@@ -91,3 +91,38 @@ weather_df %>%
   geom_smooth(se = FALSE) +
   facet_grid(. ~ name)
 ```
+
+## use data manipulation as part of this
+
+```{r}
+weather_df %>% 
+  filter(name == "CentralPark_NY") %>% 
+  mutate(
+    tmax = tmax * ( 9 / 5 ) + 32,
+    tmin = tmin * ( 9 / 5 ) + 32
+  ) %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point()
+```
+
+## Stacking geoms
+which geoms do you want 
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) + 
+  geom_smooth()
+```
+
+give u an idea of how dense the data is at a certain point
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_hex()
+```
+
+
+```{r}
+
+```
+
