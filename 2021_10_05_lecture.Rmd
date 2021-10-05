@@ -10,6 +10,13 @@ output: github_document
 ```{r}
 library(tidyverse)
 library(ggridges)
+
+#global argument for embedding 
+#knitr::opts_chunk$set(
+#  fig.width = 6,
+#  fig.asp = 0.6,
+#  out.width = "90%"
+#)
 ```
 
 load a data set that we use the most
@@ -165,6 +172,15 @@ weather_df %>%
 ```
 
 
+## embedding plots
+
+we can set this globally on top
+
+```{r, fig.width = 12}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .3)
+```
 
 
 
