@@ -121,8 +121,50 @@ weather_df %>%
   geom_hex()
 ```
 
+## Univariate plots
 
 ```{r}
-
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_histogram() +  
+  facet_grid(. ~ name)
 ```
+
+Let's try some other plots
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_density(alpha = 0.3)
+```
+
+still with tmax and name
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_boxplot()
+```
+
+some people like violin plots???
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_violin()
+```
+
+
+what about ridges ...
+
+```{r}
+library(ggridges)
+weather_df %>% 
+  ggplot(aes(x = tmax, y = name)) +
+  geom_density_ridges(alpha = 0.3, scale = .8)
+```
+
+
+
+
 
