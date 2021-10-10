@@ -34,5 +34,89 @@ weather_df =
 weather_df
 ```
 
-Scales
+## Plot from last lecture
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5)
+```
+
+## Add Labels
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum daily temperature(C)",
+    y = "Maximum daily temperature(C)",
+    caption = "Data from rnoaa package; temperature in 2017"
+  )
+```
+
+## Scales
+
 aesthetic mapping tell you how a variable mapps onto some graph feature. This happens in the background, but we still have some control when we create the graph. Scales is going to control the behavior of things that happen behind the scenes with the sesthetic mappings. 
+
+start with the same plot and define x and y scales
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum daily temperature(C)",
+    y = "Maximum daily temperature(C)",
+    caption = "Data from rnoaa package; temperature in 2017"
+  ) + 
+  # the variable that maps to the x axis is continuous, so use the following 
+  scale_x_continuous(
+    breaks = c(-15,0,15), # suppose we didn't want -10,0,and 10
+    labels = c("-15 C", "0 ","15")
+  ) + 
+  scale_y_continuous(
+    #trans = "sqrt" # using the square root transformation
+    position = "right" # put the scale on the right
+  )
+```
+
+Look at the color scales
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum daily temperature(C)",
+    y = "Maximum daily temperature(C)",
+    caption = "Data from rnoaa package; temperature in 2017"
+  ) +
+  scale_color_hue(
+    # we can define something different for the name here
+    # we update from the variable "name" to "location"
+    name = "Location",
+    h = c(100,300)) #h tells something about the hue of a scale, we can define our own color here
+```
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum daily temperature(C)",
+    y = "Maximum daily temperature(C)",
+    caption = "Data from rnoaa package; temperature in 2017"
+  ) +
+  # if u don't like what the usual default ggplot color, and not good at define own color and design, this is the package u can use. we can look up the viridis package online 
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE) 
+# here, name is a categorical predictor that has three levels, so the scale is discrete, therefore, we have to add discrete = TRUE.
+
+```
+
