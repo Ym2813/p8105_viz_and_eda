@@ -256,3 +256,55 @@ now we put all those plot together to a multi-panel plot
 (tmax_tmin_p + prcp_dens_p) / tmax_date_p
 ```
 
+## Data manipulation
+
+```{r}
+#fill is the proper term to use here instead of color
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_violin(alpha = .5)
+## ggplot is taking the categorical variable name, change it from a character to a factor, which takes character+numer, such as 1central park, 2waikiki, etc. To put them in different order, don't go into ggplot to change them, we need to know that we want them to be factors and put them in the order we want. That is, we need to manipulate our data differently, using factors to change their order. The key note here is that changing the order of the three "names" is a data manipulation problem not a gg plot problem
+```
+
+Fix the order: control your factors
+
+```{r}
+weather_df %>% 
+  mutate(
+    name = factor(name),
+    # this assumes alphabetic order, cp1, waikiki2, waterhole3, which is what ggplot will do even if we don't mutate the variable like this here
+    name = forcats::fct_relevel(name, c("Waikiki_HA"))
+    # relevel that waikiki is first and everything else is correct
+  ) %>% 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_violin(alpha = .5)
+```
+
+what if we want densities for tmin and tmax simultaneously?
+
+```{r}
+  weather_df %>% 
+  filter(name == "CentralPark_NY") %>% 
+  #convoluted because if we want to show both tmax and tmin, but they are both varibales, so this becomes a tidy problem, we need to make tmax and tmin to rows
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) %>% 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = .5) 
+#This gives us a temperature distribution for tmax and a temperature distribution for tmin
+```
+
+```{r}
+weather_df %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) %>% 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = .5) + 
+  facet_grid(. ~ name)
+```
+
