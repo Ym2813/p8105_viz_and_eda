@@ -117,6 +117,46 @@ weather_df %>%
     name = "Location",
     discrete = TRUE) 
 # here, name is a categorical predictor that has three levels, so the scale is discrete, therefore, we have to add discrete = TRUE.
+```
 
+## Themes
+Plot features that are not data related
+
+Shift the legend
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum daily temperature(C)",
+    y = "Maximum daily temperature(C)",
+    caption = "Data from rnoaa package; temperature in 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE) +
+  theme(legend.position = "bottom")
+# there are a lot of other argument to control legend
+```
+
+change the overall theme: theme_bw(), theme_minimal(), theme_classic(), ggthemes::
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum daily temperature(C)",
+    y = "Maximum daily temperature(C)",
+    caption = "Data from rnoaa package; temperature in 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE) +
+  theme_minimal() + # this is the overall theme, update at first, if update behind other theme() tweaks, this is going to override everything, if we want to use theme() to change things, put it below the overal theme, for example: 
+  theme(legend.position = "bottom")
 ```
 
