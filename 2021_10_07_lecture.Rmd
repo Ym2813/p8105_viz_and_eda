@@ -296,6 +296,7 @@ what if we want densities for tmin and tmax simultaneously?
 #This gives us a temperature distribution for tmax and a temperature distribution for tmin
 ```
 
+
 ```{r}
 weather_df %>% 
   pivot_longer(
@@ -306,5 +307,36 @@ weather_df %>%
   ggplot(aes(x = temperatures, fill = observation)) +
   geom_density(alpha = .5) + 
   facet_grid(. ~ name)
+```
+
+## Revisit the plots 
+
+data from the FAS study
+```{r}
+pups_df = 
+  read_csv("data/FAS_pups.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(sex = recode(sex, `1` = "male", `2` = "female"))
+
+litters_df = 
+  read_csv("data/FAS_litters.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(group, into = c("dose","day_of_tx"),sep = 3)
+  
+fas_df = left_join(pups_df, litters_df, by = "litter_number")
+
+
+fas_df %>% 
+  select(dose,day_of_tx, starts_with("pd_")) %>% 
+  pivot_longer(
+    pd_ears:pd_walk,
+    names_to = "outcome",
+    values_to = "pn_day"
+  ) %>% 
+  drop_na() %>% 
+  mutate(outcome = forcats::fct_relevel(outcome, "pd_ears","pd_pivot","pd_walk","pd_eyes")) %>% 
+  ggplot(aes(x = dose, y = pn_day)) + 
+  geom_violin() + 
+  facet_grid(day_of_tx ~ outcome) #day of treatment against the variable that I'm interested in 
 ```
 
