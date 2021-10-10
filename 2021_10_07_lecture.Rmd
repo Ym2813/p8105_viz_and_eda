@@ -206,3 +206,53 @@ ggplot(data = waikiki, aes(x = date, y = tmax, color = name)) +
   geom_line(data = central_park)
 ```
 
+## `patchwork`
+
+refer back to facet, which creating the exact same plot in the different panel, the same aes mapping and geoms to create for different categories. 
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, fill = name)) +
+  geom_density(alpha = 0.5) +
+  facet_grid(. ~ name) # no rows, and have columns according to name
+```
+
+if we want to put a density plot aside of a plotting--> when we want multi-panel plot but cannot facet, patchwork
+
+```{r}
+tmax_tmin_p =
+  weather_df %>% 
+    ggplot(aes(x = tmin, y = tmax, color = name)) +
+    geom_point(alpha = .5) +
+    theme(legend.position = "none")
+
+prcp_dens_p = 
+  weather_df %>% 
+  filter(prcp > 0) %>% # to get a better graph, we have to know to use the days with precipitation
+  ggplot(aes(x = prcp, fill = name)) + #fill the density plot according to name
+  geom_density(alpha = .5) +
+  theme(legend.position = "none")
+
+tmax_date_p = 
+  weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_smooth(se = FALSE) + #standard error is false
+  theme(legend.position = "none")
+```
+
+now we put all those plot together to a multi-panel plot
+
+```{r}
+# 3 panel side by side
+#tmax_tmin_p + prcp_dens_p + tmax_date_p
+
+#put the last two together
+#tmax_tmin_p + (prcp_dens_p + tmax_date_p)
+
+#one on top, next two on bottom
+#tmax_tmin_p / (prcp_dens_p + tmax_date_p)
+
+(tmax_tmin_p + prcp_dens_p) / tmax_date_p
+```
+

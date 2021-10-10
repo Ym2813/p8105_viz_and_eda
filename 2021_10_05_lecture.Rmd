@@ -77,8 +77,8 @@ weather_df %>%
   geom_point(alpha = 0.3) +
   geom_smooth(se = FALSE) + 
   # it's har to see the lines, so we can use other arguments
-  facet_grid(.~ name)
-  #Using the dot because ...?  
+  facet_grid(. ~ name)
+  #Using the dot because there are no rows!!
 ```
 
 ```{r}
