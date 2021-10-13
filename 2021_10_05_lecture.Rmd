@@ -78,7 +78,7 @@ weather_df %>%
   geom_smooth(se = FALSE) + 
   # it's har to see the lines, so we can use other arguments
   facet_grid(. ~ name)
-  #Using the dot because there are no rows!!
+  #Using the dot because there are no rows, i don't want to seperate the rows.
 ```
 
 ```{r}
